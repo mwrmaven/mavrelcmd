@@ -25,14 +25,24 @@ public class App {
         // 所有依赖文件的路径
         Set<String> search = fileSearch.search(initPath);
 
-        // 遍历路径，生成dependencies
         FileOutputStream fos = null;
         FileChannel channel = null;
+
+        FileOutputStream fos1 = null;
+        FileChannel channel1 = null;
         try {
             fos = new FileOutputStream(new File("/Users/mawenrui/Desktop/dependencies.txt"));
             channel = fos.getChannel();
+
+            fos1 = new FileOutputStream(new File("/Users/mawenrui/Desktop/mvncommonds.txt"));
+            channel1 = fos1.getChannel();
+
             ByteBuffer buffer = ByteBuffer.allocate(4096);
+
             for (String st : search) {
+                // 生成dependencies
+                String absoluteP = st;
+                st = st.replace(initPath + "/", "");
                 buffer.clear();
                 logger.info("最终文件路径为 " + st);
                 String[] params = st.split("/");
@@ -40,7 +50,8 @@ public class App {
                 String artiId = params[params.length - 3];
                 // 获取groupid
                 String groupId = st.substring(0, st.indexOf(artiId, st.indexOf("/")) - 1).replaceAll("/", ".");
-                String version = params[params.length - 1].replace(artiId + "-", "").replace(".jar", "");
+                String version = params[params.length - 1].replace(artiId + "-", "");
+                version = version.substring(0, version.lastIndexOf("."));
 
                 if (st.endsWith("jar")) {
                     StringBuilder sb = new StringBuilder();
@@ -59,6 +70,18 @@ public class App {
                     buffer.flip();
                     channel.write(buffer);
                 }
+
+                buffer.clear();
+                // 生成maven命令行
+                StringBuilder sb1 = new StringBuilder("mvn deploy:deploy-file -DgroupId=")
+                        .append(groupId).append(" -DartifactId=").append(artiId)
+                        .append(" -Dversion=").append(version).append(" -Dpackaging=")
+                        .append(absoluteP.substring(absoluteP.length() - 3))
+                        .append(" -Dfile=").append(absoluteP).append(" -DrepositoryId=releases -Durl=")
+                        .append("http://127.0.0.1:8080/repository/releases").append("\n");
+                buffer.put(sb1.toString().getBytes());
+                buffer.flip();
+                channel1.write(buffer);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -70,6 +93,8 @@ public class App {
             try {
                 channel.close();
                 fos.close();
+                channel1.close();
+                fos1.close();
             } catch (IOException e) {
                 e.printStackTrace();
                 logger.error(e.getMessage());

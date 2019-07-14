@@ -26,8 +26,7 @@ public class FileSearch {
                     System.out.println("找到文件" + f);
                     String absolutePath = f.getAbsolutePath();
                     if (absolutePath.endsWith("pom") || absolutePath.endsWith("jar")) {
-                        System.out.println("===" + absolutePath);
-                        localtions.add(absolutePath.replace("/Users/mawenrui/Desktop/dependencies/", ""));
+                        localtions.add(absolutePath);
                     }
                 }
             }
