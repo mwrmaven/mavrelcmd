@@ -1,4 +1,4 @@
-package com.mavenr;
+package com.mavenr.options;
 
 import java.io.File;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class FileSearch {
                     String absolutePath = f.getAbsolutePath();
                     if (absolutePath.endsWith("pom") || absolutePath.endsWith("jar")) {
                         System.out.println("===" + absolutePath);
-                        localtions.add(absolutePath);
+                        localtions.add(absolutePath.replace("/Users/mawenrui/Desktop/dependencies/", ""));
                     }
                 }
             }
