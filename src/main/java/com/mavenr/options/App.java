@@ -73,11 +73,11 @@ public class App {
 
                 buffer.clear();
                 // 生成maven命令行
-                StringBuilder sb1 = new StringBuilder("mvn deploy:deploy-file -DgroupId=")
-                        .append(groupId).append(" -DartifactId=").append(artiId)
-                        .append(" -Dversion=").append(version).append(" -Dpackaging=")
+                StringBuilder sb1 = new StringBuilder("mvn deploy:deploy-file -DgroupId=")
+                        .append(groupId).append(" -DartifactId=").append(artiId)
+                        .append(" -Dversion=").append(version).append(" -Dpackaging=")
                         .append(absoluteP.substring(absoluteP.length() - 3))
-                        .append(" -Dfile=").append(absoluteP).append(" -DrepositoryId=releases -Durl=")
+                        .append(" -Dfile=").append(absoluteP).append(" -DrepositoryId=releases -Durl=")
                         .append("http://127.0.0.1:8080/repository/releases").append("\n");
                 buffer.put(sb1.toString().getBytes());
                 buffer.flip();
